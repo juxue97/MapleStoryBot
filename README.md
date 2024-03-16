@@ -1,6 +1,6 @@
 # MapleStory
 - This is just for self entertainment. 
-- Main python scripts : main.py
+- Main python script : main.py
 
 # Data Collection files
 - data_collection.py
