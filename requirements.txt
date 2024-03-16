@@ -1,0 +1,8 @@
+keyboard
+pyautogui
+numpy
+opencv-python
+pydirectinput
+pillow
+pywin32
+thread6
