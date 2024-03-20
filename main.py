@@ -66,7 +66,7 @@ while (True):
         print('no detected image') 
         continue 
   
-    # Get the Screenshot of that window -> THREAD 1  vff  vff  vfff  vfff  vffff  vfff  vfff vfff
+    # Get the Screenshot of that window -> THREAD 1  
     ss=wincap.screenshot
     
     # Detect Runes, player
