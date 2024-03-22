@@ -7,6 +7,7 @@ import time
 import cv2
 import keyboard
 from threading import Thread, Lock
+from ctypes import windll
 
 class WindowCapture:
     # Add Threading Properties
@@ -28,6 +29,15 @@ class WindowCapture:
         # create a thread lock object
         self.lock = Lock()
         self.window_name = window_name
+        try:
+            # Windows 10 and later
+            ctypes.windll.shcore.SetProcessDpiAwareness(2)  # PROCESS_PER_MONITOR_DPI_AWARE
+        except AttributeError:
+            try:
+                # Windows 8.1 and earlier
+                ctypes.windll.user32.SetProcessDPIAware()
+            except Exception as e:
+                print("Failed to set DPI awareness:", e)
 
         if window_name is None:
             self.hwnd = win32gui.GetDesktopWindow()
