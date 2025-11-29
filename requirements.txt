@@ -4,6 +4,6 @@ numpy
 opencv-python
 pydirectinput
 pillow
-pywin32; platform_system == "Windows"
+pywin32
 python-dotenv
 from_root
