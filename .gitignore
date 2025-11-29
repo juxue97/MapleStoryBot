@@ -1,0 +1,119 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+*.pkl
+*.pickle
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyd
+*.pyo
+*.pdb
+
+# C extensions
+*.c
+
+# -------------------------
+# Virtual Environments
+# -------------------------
+venv/
+.venv/
+ENV/
+env/
+
+# -------------------------
+# Logs / Outputs
+# -------------------------
+*.log
+logs/
+output/
+results/
+*.out
+
+# -------------------------
+# Environment / Secrets
+# -------------------------
+.env
+.env.*
+*.secret
+*.key
+
+# -------------------------
+# Python Specific Files
+# -------------------------
+pip-log.txt
+pip-delete-this-directory.txt
+poetry.lock
+Pipfile.lock
+
+# -------------------------
+# Jupyter / Notebook
+# -------------------------
+.ipynb_checkpoints/
+*.ipynb
+
+# -------------------------
+# Cache / Build / Dist
+# -------------------------
+build/
+dist/
+sdist/
+wheelhouse/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# -------------------------
+# IDE / Editors
+# -------------------------
+
+# VS Code
+.vscode/
+.code-workspace
+
+# PyCharm
+.idea/
+
+# Others
+*.sublime-project
+*.sublime-workspace
+
+# -------------------------
+# OS / System Files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# WSL / Linux temp
+# -------------------------
+*.swp
+*.swo
+*~
+
+# -------------------------
+# Image datasets / training
+# -------------------------
+datasets/
+data/
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.gif
+
+# If storing images for CV example, remove above rule.
+
+# -------------------------
+# Model files (optional)
+# -------------------------
+*.pt
+*.onnx
+*.h5
+
+test.py
