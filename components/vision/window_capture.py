@@ -4,9 +4,9 @@ import ctypes
 from threading import Thread, Lock
 from typing import Optional, Tuple
 
-import win32gui
-import win32ui
-import win32con
+import win32gui # type: ignore
+import win32ui # type: ignore
+import win32con # type: ignore
 import numpy as np
 
 from configs import constants
