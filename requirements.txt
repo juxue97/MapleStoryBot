@@ -7,3 +7,4 @@ pillow
 pywin32
 python-dotenv
 from_root
+pyyaml
