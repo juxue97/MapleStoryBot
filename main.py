@@ -5,22 +5,32 @@ import numpy as np
 import cv2
 import keyboard
 
+from components.bot.auto_bot import AutoBot
 from configs import constants
 from exception import CustomException
 from logger import logging
 from components.vision.window_capture import WindowCapture
 from components.vision.vision_preprocessor import VisionPreprocessor
 
+# TODO - for testing - remove in future
+def get_position():
+    return (100, 300)
+
 class RunTasks():
     def __init__(self):
         try:
             self.window_name: str = constants.WINDOW_NAME
+            self.bot_config_path: str = constants.BOT_CONFIG_PATH
+            self.pattern_config_path: str = constants.PATTERN_CONFIG_PATH
+
             self.is_running: bool = True
             self.loop_start_time: float = 0.0
             self.loop_end_time: float = 0.0
 
             self.wc: WindowCapture = None
             self.p: VisionPreprocessor = None
+            self.b: AutoBot = None
+
 
 
         except Exception as e:
@@ -39,9 +49,18 @@ class RunTasks():
         except Exception as e:
             raise CustomException(e, sys) from e
 
-    def run_bot(self):
-        print("bot logic running...")
-        # TODO
+    def run_bot(self, window_name: str, bot_config_path: str, pattern_config_path: str):
+        try:
+            logging.info("Starting AutoBot thread...")
+            self.b: AutoBot = AutoBot(window_name=window_name, 
+                                    bot_config_path=bot_config_path, 
+                                    pattern_config_path=pattern_config_path,
+                                    get_position=get_position()
+                                    )
+            self.b.start()
+
+        except Exception as e:
+            raise CustomException(e, sys) from e
 
     def run_ai(self):
         print("ai logic running...")
@@ -53,7 +72,10 @@ class RunTasks():
             self.run_vision(window_name=self.window_name)
 
             # TODO - run other thread with their functions
-            self.run_bot()
+            self.run_bot(window_name=self.window_name,
+                         bot_config_path=self.bot_config_path,
+                         pattern_config_path=self.pattern_config_path
+                        )
             self.run_ai()
 
             logging.info("Starting loop")
@@ -108,6 +130,7 @@ class RunTasks():
             self.is_running = False
             self.wc.stop()
             self.p.stop()
+            self.b.stop()
 
             loop_duration: float = time.time() - start_time
             logging.info(f"Program stopped. Ran for {loop_duration:.2f}s")

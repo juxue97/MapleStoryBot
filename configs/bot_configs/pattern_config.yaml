@@ -1,0 +1,47 @@
+map_name: "Lachelein_Clocktower_Example"
+
+points:
+  start_left:
+    x: 120
+    y: 540
+
+  start_right:
+    x: 980
+    y: 540
+
+  summon1_point:
+    x: 250
+    y: 540
+
+  erda_shower_point:
+    x: 600
+    y: 510
+
+  sol_janus_point:
+    x: 820
+    y: 480
+
+summons:
+  - name: "summon1"
+    point: "summon1_point"
+
+  - name: "erda_shower"
+    point: "erda_shower_point"
+
+  - name: "sol_janus"
+    point: "sol_janus_point"
+
+hunting_loop:
+  - type: "sweep"
+    from: "start_right"
+    to: "start_left"
+    jumps: 5
+    attack: "primary_attack"
+    style: "hold"
+
+  - type: "sweep"
+    from: "start_left"
+    to: "start_right"
+    jumps: 5
+    attack: "primary_attack"
+    style: "hold"

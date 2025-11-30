@@ -1,0 +1,64 @@
+movement:
+  - name: "move_left"
+    key: "left"
+
+  - name: "move_right"
+    key: "right"
+
+  - name: "move_up"
+    key: "up"
+
+  - name: "move_down"
+    key: "down"
+
+  - name: "jump"
+    key: "space"
+
+  - name: "up_rope"
+    key: "altleft"
+
+  - name: "npc_key"
+    key: "\\"
+
+attacks:
+  - name: "primary_attack"
+    key: "v"
+    cooldown: null
+
+  - name: "secondary_attack"
+    key: null
+    cooldown: null
+
+  - name: "tertiary_attack"
+    key: null
+    cooldown: null
+
+buffs:
+  - name: "buff_skill"
+    key: "f5"
+    cooldown: 120
+
+  - name: "hyper_buff"
+    key: null
+    cooldown: null
+
+specials:
+  - name: "summon1"
+    key: "home"
+    cooldown: 60
+
+  - name: "summon2"
+    key: null
+    cooldown: null
+
+  - name: "summon3"
+    key: null
+    cooldown: null
+
+  - name: "sol_janus"
+    key: "m"
+    cooldown: 60
+
+  - name: "erda_shower"
+    key: "n"
+    cooldown: 60
