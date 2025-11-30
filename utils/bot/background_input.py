@@ -1,8 +1,8 @@
 # background_input.py
 import time
-import win32gui # type: ignore
-import win32con # type: ignore
-import win32api # type: ignore
+import win32gui  # type: ignore
+import win32con  # type: ignore
+import win32api  # type: ignore
 from contextlib import contextmanager
 
 from configs.constants.vk_keys import VK_MAP
@@ -22,23 +22,19 @@ def find_window_by_title(keyword: str):
     return result[0] if result else None
 
 
-def _build_lparam(vk_code, is_keyup=False):
-    scan_code = win32api.MapVirtualKey(vk_code, 0)
-    if not is_keyup:
-        return 0x00000001 | (scan_code << 16)
-    else:
-        return 0xC0000001 | (scan_code << 16)
-
-
 class BackgroundInput:
     """
-    Sends keyboard events directly to a specific window via PostMessage.
-    Can work on minimized/unfocused windows (if the app accepts messages).
+    Sends *real* keyboard events via keybd_event (OS-level).
+    We keep hwnd only to bring the target window (e.g. Remote Desktop) to foreground.
     """
     def __init__(self, window_name: str):
         self.hwnd = find_window_by_title(window_name)
         if not self.hwnd:
             raise RuntimeError(f"Window with title containing '{window_name}' not found")
+
+        # Make sure the RDP window is foreground so it receives keyboard events
+        win32gui.ShowWindow(self.hwnd, win32con.SW_RESTORE)
+        win32gui.SetForegroundWindow(self.hwnd)
 
     def _vk(self, key: str) -> int:
         key = key.lower()
@@ -55,13 +51,13 @@ class BackgroundInput:
 
     def key_down(self, key: str):
         vk = self._vk(key)
-        lparam = _build_lparam(vk, is_keyup=False)
-        win32api.PostMessage(self.hwnd, win32con.WM_KEYDOWN, vk, lparam)
+        # scan code 0 is usually fine; flags 0 = key down
+        win32api.keybd_event(vk, 0, 0, 0)
 
     def key_up(self, key: str):
         vk = self._vk(key)
-        lparam = _build_lparam(vk, is_keyup=True)
-        win32api.PostMessage(self.hwnd, win32con.WM_KEYUP, vk, lparam)
+        # KEYEVENTF_KEYUP to release
+        win32api.keybd_event(vk, 0, win32con.KEYEVENTF_KEYUP, 0)
 
     def press(self, key: str, presses: int = 1, interval: float = 0.0):
         for _ in range(presses):

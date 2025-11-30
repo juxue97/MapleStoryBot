@@ -16,7 +16,7 @@ class MovementController:
     def __init__(
         self,
         utils: BotUtils,
-        get_position: Callable[[], tuple[int, int]],
+        get_position: tuple[int, int],
         x_tolerance: int = 5,
         y_tolerance: int = 5,
         speed: float = BOT_SPEED,
@@ -51,7 +51,7 @@ class MovementController:
         max_steps = 20  # safety; each step can be a long-ish hold
 
         for _ in range(max_steps):
-            cur_x, _ = self.get_position()
+            cur_x, _ = self.get_position
             diff = target_x - cur_x
 
             # close enough
@@ -83,7 +83,7 @@ class MovementController:
         """
         max_steps = 100
         for _ in range(max_steps):
-            _, cur_y = self.get_position()
+            _, cur_y = self.get_position
             diff = target_y - cur_y
 
             if abs(diff) <= self.y_tol:

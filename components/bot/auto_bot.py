@@ -24,7 +24,7 @@ class AutoBot:
         window_name: str,
         bot_config_path: str,
         pattern_config_path: str,
-        get_position: Callable[[], tuple[int, int]],
+        get_position: tuple[int, int],
     ):
         try:
             self.lock = Lock()
