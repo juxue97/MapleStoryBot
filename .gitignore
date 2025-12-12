@@ -115,5 +115,7 @@ data/
 *.pt
 *.onnx
 *.h5
+artifacts/macros/*.yaml
 
 test.py
+
