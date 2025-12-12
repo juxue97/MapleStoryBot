@@ -1,27 +1,29 @@
 import time
 import sys
-from typing import Optional
+from typing import List, Optional
 import numpy as np
 import cv2
 import keyboard
 
-from components.bot.auto_bot import AutoBot
 from configs import constants
 from exception import CustomException
 from logger import logging
 from components.vision.window_capture import WindowCapture
 from components.vision.vision_preprocessor import VisionPreprocessor
-
-# TODO - for testing - remove in future
-def get_position():
-    return (100, 300)
+from components.bot.macro_player import MacroPlayer
+from components.bot.macro_recorder import MacroRecorder
 
 class RunTasks():
     def __init__(self):
         try:
             self.window_name: str = constants.WINDOW_NAME
-            self.bot_config_path: str = constants.BOT_CONFIG_PATH
-            self.pattern_config_path: str = constants.PATTERN_CONFIG_PATH
+            self.macro_save_dir: str = constants.MACRO_SAVE_DIR
+            self.macro_config_path: str = constants.MACRO_CONFIG_PATH
+
+            self.macro_player_start: str = constants.MACRO_PLAYER_START
+            self.macro_player_stop: str = constants.MACRO_PLAYER_STOP
+            self.macro_record_start: str = constants.MACRO_RECORD_START
+            self.macro_record_stop: str = constants.MACRO_RECORD_STOP
 
             self.is_running: bool = True
             self.loop_start_time: float = 0.0
@@ -29,9 +31,8 @@ class RunTasks():
 
             self.wc: WindowCapture = None
             self.p: VisionPreprocessor = None
-            self.b: AutoBot = None
-
-
+            self.bmp: MacroPlayer = None
+            self.bmr: MacroRecorder = None
 
         except Exception as e:
             raise CustomException(e, sys) from e
@@ -49,15 +50,21 @@ class RunTasks():
         except Exception as e:
             raise CustomException(e, sys) from e
 
-    def run_bot(self, window_name: str, bot_config_path: str, pattern_config_path: str):
+    def run_bot(self, window_name: str, recorder_filename: str):
         try:
             logging.info("Starting AutoBot thread...")
-            self.b: AutoBot = AutoBot(window_name=window_name, 
-                                    bot_config_path=bot_config_path, 
-                                    pattern_config_path=pattern_config_path,
-                                    get_position=get_position()
-                                    )
-            self.b.start()
+            self.bmp: MacroPlayer = MacroPlayer(window_name=window_name)
+            self.bmp.load(recorder_filename)
+
+        except Exception as e:
+            raise CustomException(e, sys) from e
+        
+    def macro_record(self,dir_name:str):
+        try:
+            keys: List[str] = [self.macro_player_start, self.macro_player_stop, self.macro_record_start, self.macro_record_stop]
+            self.bmr: MacroRecorder = MacroRecorder(dir_name=dir_name,
+                                                    keys=keys
+                                                )
 
         except Exception as e:
             raise CustomException(e, sys) from e
@@ -69,12 +76,12 @@ class RunTasks():
     def start_program(self, debug: True):
         try:
             logging.info("Starting program...")
+            self.macro_record(dir_name=self.macro_save_dir)
+
             self.run_vision(window_name=self.window_name)
 
-            # TODO - run other thread with their functions
             self.run_bot(window_name=self.window_name,
-                         bot_config_path=self.bot_config_path,
-                         pattern_config_path=self.pattern_config_path
+                         recorder_filename=self.macro_config_path
                         )
             self.run_ai()
 
@@ -98,6 +105,23 @@ class RunTasks():
                     print('no detected image')
                     time.sleep(0.01)
                     continue
+
+                # Play
+                if self.bmp.stopped and (not self.bmr.is_recording) and keyboard.is_pressed(self.macro_player_start):
+                    self.bmp.start()
+
+                # Stop play
+                if (not self.bmp.stopped) and keyboard.is_pressed(self.macro_player_stop):
+                    self.bmp.stop()
+
+                # Start record
+                if self.bmp.stopped and (not self.bmr.is_recording) and keyboard.is_pressed(self.macro_record_start):
+                    self.bmr.start()
+
+                # Stop record
+                if self.bmr.is_recording and keyboard.is_pressed(self.macro_record_stop):
+                    self.bmr.stop_and_save()
+
 
                 # static_image = cv2.imread(r"C:\Users\User\Desktop\bot\MapleStoryBot\data\Screenshot 2025-11-29 232832.jpg")
 
@@ -130,7 +154,8 @@ class RunTasks():
             self.is_running = False
             self.wc.stop()
             self.p.stop()
-            self.b.stop()
+            self.bmp.stop()
+            cv2.destroyAllWindows()
 
             loop_duration: float = time.time() - start_time
             logging.info(f"Program stopped. Ran for {loop_duration:.2f}s")
