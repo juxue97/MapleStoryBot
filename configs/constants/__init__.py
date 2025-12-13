@@ -17,6 +17,10 @@ MACRO_SAVE_DIR: str = str(MACRO_CONFIG_DIR)
 MACRO_CONFIG_PATH: Path = MACRO_CONFIG_DIR / os.getenv("MACRO_CONFIG_FILENAME", "")
 MACRO_CONFIG_PATH: str = str(MACRO_CONFIG_PATH)
 
+TEMPLATE_DIR: Path = PROJECT_ROOT / "configs" / "detector_configs" / "templates"
+RUNE_TEMPLATE_PATH: str = str(TEMPLATE_DIR / "rune.jpg")
+PLAYER_TEMPLATE_PATH: str = str(TEMPLATE_DIR / "player.jpg")
+
 # bot configs
 MACRO_PLAYER_START: str = "f9"
 MACRO_PLAYER_STOP: str = "f10"
