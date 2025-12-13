@@ -186,11 +186,22 @@ class RunTasks():
                 if self.bmr.is_recording and keyboard.is_pressed(self.macro_record_stop):
                     self.bmr.stop_and_save()
 
-
-                # static_image = cv2.imread(r"C:\Users\User\Desktop\bot\MapleStoryBot\data\Screenshot 2025-11-29 232832.jpg")
+                # img_path = r"C:\Users\User\Desktop\bot\MapleStoryBot\data\images\arrows.jpg"
+                # static_image = cv2.imread(img_path)
 
                 self.p.set_input(screenshot)
                 processed: Optional[np.ndarray] = self.p.get_output()
+
+                arrow_boxes = []
+                arrow_debug = None
+
+                if processed is not None:
+                    arrow_boxes, arrow_debug = self.p.detect_arrow_contours(processed)
+
+                    # Example: crop each arrow for AI later
+                    arrow_crops = []
+                    for (x, y, w, h) in arrow_boxes:
+                        arrow_crops.append(processed[y:y+h, x:x+w])
 
                 if debug:
                     if self.p.roi_enabled and screenshot is not None:
@@ -232,6 +243,9 @@ class RunTasks():
                     cv2.imshow("Tracking Image", screenshot)
                     if processed is not None:
                         cv2.imshow("Preprocessed Image", processed)
+
+                    if arrow_debug is not None:
+                        cv2.imshow("Arrow Debug", arrow_debug)
 
                     cv2.waitKey(1)
 

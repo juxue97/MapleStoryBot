@@ -2,26 +2,25 @@ from dataclasses import dataclass
 
 @dataclass
 class FilterConfig:
-    # HSV ranges
-    hMin: int = 0
-    sMin: int = 0
-    vMin: int = 0
+    h_min: int = 0
+    h_max: int = 179 
 
-    hMax: int = 179
-    sMax: int = 255
-    vMax: int = 255
+    s_min: int = 0
+    s_max: int = 255
 
-    # Gaussian blur
-    gaussian: int = 1  # must be odd
+    v_min: int = 0
+    v_max: int = 255
 
-    # Canny edges
-    canny_low_threshold: int = 0
-    canny_high_threshold: int = 0
+    hsv_channel: int = 2
 
-    # Morph kernels
-    kernelXY_d: int = 10
-    kernelXY_e: int = 10
+    brightness: int = 0
+    contrast: int = 30
 
-    # Morph iterations
+    gaussian: int = 3
+
+    use_adaptive: bool = True
+    thresh_min: int = 90
+
+    kernel_size: int = 3
     dilation_iterations: int = 1
     erosion_iterations: int = 1
